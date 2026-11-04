@@ -1,0 +1,146 @@
+[
+  {
+    "policy_id": "POL-0001",
+    "customer_id": "CUS-0001",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-06-01",
+      "end": "2026-06-20",
+      "destination": "Singapore"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0002",
+    "customer_id": "CUS-0002",
+    "plan": "essential",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-07-05",
+      "end": "2026-07-19",
+      "destination": "Japan"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0003",
+    "customer_id": "CUS-0003",
+    "plan": "essential",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-08-01",
+      "end": "2026-08-10",
+      "destination": "New Zealand"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0004",
+    "customer_id": "CUS-0004",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-06-12",
+      "end": "2026-06-30",
+      "destination": "Italy"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0005",
+    "customer_id": "CUS-0005",
+    "plan": "essential",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-05-03",
+      "end": "2026-05-24",
+      "destination": "Vietnam"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0006",
+    "customer_id": "CUS-0006",
+    "plan": "essential",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-09-02",
+      "end": "2026-09-16",
+      "destination": "France"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0007",
+    "customer_id": "CUS-0007",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-07-20",
+      "end": "2026-08-03",
+      "destination": "United States"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0008",
+    "customer_id": "CUS-0008",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-06-08",
+      "end": "2026-06-15",
+      "destination": "Fiji"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0009",
+    "customer_id": "CUS-0009",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-07-09",
+      "end": "2026-07-25",
+      "destination": "Canada"
+    },
+    "travellers": 2
+  },
+  {
+    "policy_id": "POL-0010",
+    "customer_id": "CUS-0010",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-08-14",
+      "end": "2026-08-28",
+      "destination": "United Kingdom"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0011",
+    "customer_id": "CUS-0011",
+    "plan": "comprehensive",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-10-02",
+      "end": "2026-10-20",
+      "destination": "Peru"
+    },
+    "travellers": 1
+  },
+  {
+    "policy_id": "POL-0012",
+    "customer_id": "CUS-0012",
+    "plan": "essential",
+    "purchased_on": "2026-03-01",
+    "trip": {
+      "start": "2026-04-10",
+      "end": "2026-04-22",
+      "destination": "Thailand"
+    },
+    "travellers": 1
+  }
+]

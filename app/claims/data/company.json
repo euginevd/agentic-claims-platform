@@ -1,0 +1,9 @@
+{
+  "name": "Tern Travel Insurance",
+  "fictional": true,
+  "currency": "AUD",
+  "payout_approval_limit": 1000.0,
+  "repeat_claim_review": {"claims": 3, "within_months": 12},
+  "meal_allowance_without_receipts": {"amount": 35.0, "per": "traveller per day of covered delay"},
+  "proof_of_value_above": 300.0
+}

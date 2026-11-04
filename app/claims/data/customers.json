@@ -1,0 +1,87 @@
+[
+  {
+    "customer_id": "CUS-0001",
+    "name": "Ava Lin",
+    "email": "customer1@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0002",
+    "name": "Noah Patel",
+    "email": "customer2@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0003",
+    "name": "Mia Okafor",
+    "email": "customer3@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0004",
+    "name": "Leo Russo",
+    "email": "customer4@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0005",
+    "name": "Isla Nguyen",
+    "email": "customer5@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0006",
+    "name": "Jack Moreau",
+    "email": "customer6@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0007",
+    "name": "Zoe Kim",
+    "email": "customer7@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0008",
+    "name": "Oscar Reid",
+    "email": "customer8@example.com",
+    "previous_claims": [
+      {
+        "date": "2026-01-14",
+        "summary": "Baggage delayed 30 hours",
+        "outcome": "approve",
+        "paid": 80.0
+      },
+      {
+        "date": "2026-03-22",
+        "summary": "Flight delayed 9 hours",
+        "outcome": "approve",
+        "paid": 150.0
+      }
+    ]
+  },
+  {
+    "customer_id": "CUS-0009",
+    "name": "Ruby Singh",
+    "email": "customer9@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0010",
+    "name": "Theo Walsh",
+    "email": "customer10@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0011",
+    "name": "Grace Mendes",
+    "email": "customer11@example.com",
+    "previous_claims": []
+  },
+  {
+    "customer_id": "CUS-0012",
+    "name": "Max Holloway",
+    "email": "customer12@example.com",
+    "previous_claims": []
+  }
+]
