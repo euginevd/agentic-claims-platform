@@ -6,7 +6,7 @@ An agent works the claims queue, looks up the policy wording and claims manual, 
 
 ## Agents
 
-Three versions of the first agent show the main choices: hand-written loop or SDK tool runner, and Lambda or AgentCore Runtime. See [app/README.md](app/README.md) for when to use which.
+Four numbered versions of the first agent show the main choices: local script or cloud, hand-written loop or SDK tool runner, and Lambda or AgentCore Runtime. See [app/maze/README.md](app/maze/README.md) for when to use which.
 
 ## Status
 

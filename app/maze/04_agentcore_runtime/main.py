@@ -1,7 +1,7 @@
 """Maze agent on Amazon Bedrock AgentCore Runtime.
 
 The agent itself (the tool, the loop and the limits) is reused unchanged from
-app/maze_agent/handler.py. Only the hosting wrapper differs: an AgentCore app
+app/maze/02_lambda_converse/handler.py. Only the hosting wrapper differs: an AgentCore app
 instead of a Lambda handler.
 """
 

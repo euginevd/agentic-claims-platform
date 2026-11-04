@@ -34,7 +34,7 @@ provider "aws" {
 module "maze_agent" {
   source             = "../../modules/lambda-agent"
   name               = "acp-dev-maze-agent"
-  source_dir         = "${path.root}/../../../../app/maze_agent"
+  source_dir         = "${path.root}/../../../../app/maze/02_lambda_converse"
   model_id           = var.model_id
   bedrock_model_arns = var.bedrock_model_arns
 }

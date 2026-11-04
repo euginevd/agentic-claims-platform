@@ -1,19 +1,19 @@
 # Maze agent on AgentCore Runtime (example)
 
-The same maze agent as [`../maze_agent`](../maze_agent), hosted on **Amazon Bedrock AgentCore Runtime** instead of AWS Lambda.
+The same maze agent as [`../02_lambda_converse`](../02_lambda_converse), hosted on **Amazon Bedrock AgentCore Runtime** instead of AWS Lambda.
 
-**Status:** reference example, not deployed. The deployed agent is `../maze_agent` on Lambda ([ADR 0001](../../docs/adr/0001-lambda-and-bedrock-converse.md)). AgentCore becomes the host when agents need long runs, sessions, memory or a gateway.
+**Status:** reference example, not deployed. The deployed agent is `../02_lambda_converse` on Lambda ([ADR 0001](../../../docs/adr/0001-lambda-and-bedrock-converse.md)). AgentCore becomes the host when agents need long runs, sessions, memory or a gateway.
 
 ## The key idea: same agent, different wrapper
 
 ```
-app/maze_agent/handler.py        ← the agent: tool, loop, limits (unchanged)
+app/maze/02_lambda_converse/handler.py        ← the agent: tool, loop, limits (unchanged)
    ├── lambda_handler()          ← Lambda wrapper
    └── used by
-app/maze_agent_core/main.py      ← AgentCore wrapper: imports run_agent, nothing else new
+app/maze/04_agentcore_runtime/main.py      ← AgentCore wrapper: imports run_agent, nothing else new
 ```
 
-The tool (`read_web_page` with its exact allowlist), the Converse loop, the 25-step cap and the token limits all live in `../maze_agent/handler.py`. This folder adds **about 20 lines**: an AgentCore app with one entry point. Keeping the agent logic separate from the hosting wrapper is what makes moving between Lambda and AgentCore cheap.
+The tool (`read_web_page` with its exact allowlist), the Converse loop, the 25-step cap and the token limits all live in `../02_lambda_converse/handler.py`. This folder adds **about 20 lines**: an AgentCore app with one entry point. Keeping the agent logic separate from the hosting wrapper is what makes moving between Lambda and AgentCore cheap.
 
 ## The code, step by step (`main.py`)
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
 ## Lambda vs AgentCore for this agent
 
-| | Lambda (`../maze_agent`) | AgentCore Runtime (this folder) |
+| | Lambda (`../02_lambda_converse`) | AgentCore Runtime (this folder) |
 |---|---|---|
 | Entry point | `lambda_handler(event, context)` | `@app.entrypoint invoke(payload, context)` |
 | Interface | Lambda invoke | HTTP: `POST /invocations`, `GET /ping` |
@@ -66,8 +66,8 @@ if __name__ == "__main__":
 ```powershell
 cd C:\agentic-claims-platform
 uv sync
-$env:PYTHONPATH = "app\maze_agent"
-uv run python app\maze_agent_core\main.py
+$env:PYTHONPATH = "app\maze\02_lambda_converse"
+uv run python app\maze\04_agentcore_runtime\main.py
 # In another terminal:
 curl http://127.0.0.1:8080/ping     # {"status":"Healthy",...}
 ```
@@ -76,7 +76,7 @@ Calling `POST /invocations` locally runs the agent for real, so it needs AWS cre
 
 ## Deploying (later)
 
-1. **Package:** `main.py`, `../maze_agent/handler.py` and the packages in `requirements.txt`, built for **Linux arm64, Python 3.12**.
+1. **Package:** `main.py`, `../02_lambda_converse/handler.py` and the packages in `requirements.txt`, built for **Linux arm64, Python 3.12**.
 2. **Deploy:** either the **AgentCore CLI** (as the course does in 3.4), or **Terraform**: the AWS provider has `aws_bedrockagentcore_agent_runtime` and `aws_bedrockagentcore_agent_runtime_endpoint`, plus resources for Gateway, Memory and Policy. Terraform keeps it consistent with the rest of this repo.
 3. **IAM:** the runtime's role may invoke only the one Bedrock model and write its own logs.
 4. **Invoke:** with boto3, `bedrock-agentcore` client → `invoke_agent_runtime(agentRuntimeArn=..., runtimeSessionId=..., payload=...)`. Use a new session ID (for example a UUID) per run.
