@@ -16,6 +16,20 @@ jobs:
         with:
           fetch-depth: 0
       - name: Scan full history for secrets
-        run: |
-          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest \
-            detect --source /repo --redact --verbose
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Infrastructure misconfigurations are scanned by Checkov in the terraform workflow.
+      - name: Scan dependencies (Trivy)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scanners: vuln,secret
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          ignore-unfixed: true

@@ -4,3 +4,13 @@ updates:
     directory: /
     schedule:
       interval: weekly
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: terraform
+    directories:
+      - /infra/terraform/bootstrap
+      - /infra/terraform/envs/dev
+    schedule:
+      interval: weekly

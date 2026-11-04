@@ -13,6 +13,8 @@
 !example.tfvars
 crash.log
 *.tfplan
+tfplan
+.build/
 
 # Python
 .venv/

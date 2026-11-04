@@ -1,0 +1,24 @@
+[project]
+name = "agentic-claims-platform"
+version = "0.1.0"
+requires-python = ">=3.12"
+# The Lambda runtime provides boto3, so the deployed function has no dependencies.
+dependencies = []
+
+[dependency-groups]
+dev = ["boto3>=1.35", "pytest>=8", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+pythonpath = ["app/maze_agent"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, isort, bugbear, bandit (security), pyupgrade
+select = ["E", "F", "I", "B", "S", "UP", "BLE"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]

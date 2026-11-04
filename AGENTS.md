@@ -13,4 +13,12 @@ Instructions for coding agents. Keep this file short.
 ## Docs
 
 - `docs/STATUS.md`: what is built and what is next.
+- `docs/DEPLOY.md`: one-off AWS set-up and how CI/CD deploys.
+- `docs/adr/`: architecture decisions.
 - `SECURITY.md`: how to report a vulnerability.
+
+## Checks
+
+- `uv run ruff check . && uv run ruff format --check . && uv run pytest -q`
+- `terraform fmt -check -recursive infra`
+- Tests never call a model or AWS; they use a stub.
