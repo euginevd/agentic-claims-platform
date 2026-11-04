@@ -265,14 +265,19 @@ resource "aws_budgets_budget" "monthly" {
   limit_unit   = "USD"
   time_unit    = "MONTHLY"
 
-  notification {
-    comparison_operator        = "GREATER_THAN"
-    threshold                  = 80
-    threshold_type             = "PERCENTAGE"
-    notification_type          = "ACTUAL"
-    subscriber_email_addresses = [var.budget_email]
+  # One email each time actual spend passes a step ($2, $3, $5, $10 by default).
+  dynamic "notification" {
+    for_each = var.alert_thresholds_usd
+    content {
+      comparison_operator        = "GREATER_THAN"
+      threshold                  = notification.value
+      threshold_type             = "ABSOLUTE_VALUE"
+      notification_type          = "ACTUAL"
+      subscriber_email_addresses = [var.budget_email]
+    }
   }
 
+  # Early warning when the month is forecast to go over the budget.
   notification {
     comparison_operator        = "GREATER_THAN"
     threshold                  = 100

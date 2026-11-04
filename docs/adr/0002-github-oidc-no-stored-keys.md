@@ -13,4 +13,4 @@
 
 - No access keys exist to leak or rotate.
 - A pull request can't change AWS. Deploying needs a merge to main and an approval.
-- The bootstrap (bucket, OIDC, roles, budget) is applied once by hand from CloudShell.
+- The bootstrap (bucket, OIDC, roles, budget alerts at $2, $3, $5 and $10) is applied once by hand from CloudShell.

@@ -17,9 +17,15 @@ variable "github_repo" {
 }
 
 variable "monthly_budget_usd" {
-  description = "Monthly cost alarm threshold in USD"
+  description = "Monthly budget in USD; the forecast alert fires if the month is heading over it"
   type        = string
-  default     = "20"
+  default     = "10"
+}
+
+variable "alert_thresholds_usd" {
+  description = "Actual-spend steps in USD; one email as each is passed"
+  type        = list(number)
+  default     = [2, 3, 5, 10]
 }
 
 variable "budget_email" {
