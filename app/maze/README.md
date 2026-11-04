@@ -1,85 +1,71 @@
-# Maze agent: four ways to build and host the same agent
+# Maze agent: the agent ladder, one agent built eight ways
 
-The maze agent is built four ways, numbered from simplest to most enterprise-ready. Each does the same job: a model reads a maze of linked web pages with one tool (`read_web_page`, exact host allowlist) until it finds the exit message, capped at 25 steps. What differs is **where it runs**, **which provider serves the model**, and **who writes the agent loop**.
+The same agent is built eight ways, from "write everything yourself" to "the provider runs it for you". Each does the same job: a model reads a maze of linked web pages with one tool (`read_web_page`, exact host allowlist) until it finds the exit message, with a step cap.
 
-| # | Folder | Runs on | Model through | Agent loop | Status |
+## The ladder
+
+| # | Folder | Ladder step | Runs on | Model through | Status |
 |---|---|---|---|---|---|
-| 01 | [`01_local_openai`](01_local_openai) | Your laptop | **OpenAI API** (key in `.env`) | OpenAI SDK, by hand | Learning and prototyping |
-| 02 | [`02_lambda_converse`](02_lambda_converse) | AWS Lambda | Amazon Bedrock | Bedrock **Converse API**, by hand | **Deployed** (Terraform) |
-| 03 | [`03_lambda_claude_sdk`](03_lambda_claude_sdk) | AWS Lambda | Amazon Bedrock | **Anthropic SDK tool runner** | Reference |
-| 04 | [`04_agentcore_runtime`](04_agentcore_runtime) | **AgentCore Runtime** | Amazon Bedrock | Reuses 02's loop | Reference |
+| 01 | [`01_local_openai`](01_local_openai) | Loop by hand | Laptop | OpenAI API (key in `.env`) | Learning |
+| 02 | [`02_lambda_converse`](02_lambda_converse) | Loop by hand | AWS Lambda | Bedrock (Converse) | **Deployed** |
+| 03 | [`03_lambda_claude_sdk`](03_lambda_claude_sdk) | SDK helper loop | AWS Lambda | Bedrock (Anthropic SDK tool runner) | Reference |
+| 04 | [`04_agentcore_runtime`](04_agentcore_runtime) | Loop by hand, agent host | **AgentCore Runtime** | Bedrock | Reference |
+| 05 | [`05_strands_bedrock`](05_strands_bedrock) | Lightweight framework | Laptop or AWS | Bedrock (Strands) | Reference |
+| 06 | [`06_langgraph_bedrock`](06_langgraph_bedrock) | Framework with durable state | Laptop or AWS | Bedrock (LangGraph) | Reference |
+| 07 | [`07_claude_agent_sdk`](07_claude_agent_sdk) | Batteries-included harness | Laptop or AWS | Bedrock (Claude Agent SDK) | Reference |
+| 08 | [`08_managed_agents`](08_managed_agents) | Fully managed service | Provider | Provider | Explained, no code |
 
-Read them in order: **01** is the core idea with nothing around it; **02** moves it to AWS with production controls; **03** lets an SDK write the loop; **04** changes only the host.
+```
+build more ─────────────────────────────────────────────────────────────── buy more
+loop by hand → SDK helper → lightweight framework → durable-state framework → harness → managed
+  01, 02, 04      03              05                      06                   07          08
+```
 
-## Three separate choices
+Moving right, you write and maintain less, get more built in, and control less.
 
-**1. Where does it run?**
-- **Laptop (01):** a script you run by hand.
-- **Lambda (02, 03):** a function that runs for at most 15 minutes, with no state between calls.
-- **AgentCore Runtime (04):** an AWS host built for agents, with long sessions, isolation per session, and Memory, Gateway, Identity and Policy services to attach.
+## Two separate questions
 
-**2. Who serves the model?**
-- **OpenAI API (01):** simplest to start; an API key, and data goes to OpenAI.
-- **Amazon Bedrock (02 to 04):** models run inside AWS in your chosen region (Sydney here), with IAM and no API keys. The model providers have no access to your calls.
+**1. How is the agent built?** (the ladder above)
 
-**3. Who writes the loop?**
-- **By hand (01, 02, 04):** you call the model, run tools and repeat. Full control and few dependencies.
-- **SDK tool runner (03):** you write the tool functions; the Anthropic SDK builds the tool schemas and runs the loop. Less code, but specific to Claude and a beta helper.
+| Step | What you write | What you get for free | Examples |
+|---|---|---|---|
+| Loop by hand | The loop, tool schemas, retries | Nothing | 01, 02 |
+| SDK helper | Tool functions | The loop, schemas from type hints | 03 |
+| Lightweight framework | Model, prompt, tools | The loop, tool handling, conversation management | 05 (Strands), LangChain `create_agent` |
+| Durable-state framework | A graph of steps | Saved state, resume, pause for human approval, branching, teams | 06 (LangGraph) |
+| Batteries-included harness | Options and custom tools | Built-in file, shell and web tools, subagents, hooks, permissions, sessions | 07 (Claude Agent SDK), Deep Agents |
+| Managed service | Configuration | The loop **and** the environment it runs in | 08 (Managed Agents, Bedrock Agents) |
 
-The choices are independent. 04 shows this by wrapping 02's loop in an AgentCore app with about 20 lines.
-
-## How they differ
-
-| | 01 local OpenAI | 02 Lambda Converse | 03 Lambda Claude SDK | 04 AgentCore |
-|---|---|---|---|---|
-| **Entry point** | `python maze.py` | `lambda_handler` | `lambda_handler` | `@app.entrypoint invoke` |
-| **Libraries** | `openai`, `python-dotenv` | `boto3` (built into Lambda) | `anthropic` (bundled) | `bedrock-agentcore`, `boto3` (packaged) |
-| **Credentials** | API key in `.env` | IAM role | IAM role | IAM role |
-| **Tool schema** | JSON by hand | JSON by hand | From the function's type hints and docstring | JSON by hand (reused) |
-| **Models** | OpenAI (or any OpenAI-compatible API) | Any Bedrock model | Claude only | Any Bedrock model |
-| **Data residency** | OpenAI's API | AWS Sydney | AWS Sydney | AWS Sydney |
-| **API maturity** | GA | GA | Tool runner is beta | Runtime GA, newer service |
-| **Maximum run** | As long as you like | 15 minutes | 15 minutes | Long sessions (hours) |
-| **Sessions, memory** | None | Build yourself | Build yourself | Built in or attachable |
-| **Deployment** | None | Terraform + CI/CD | Terraform + package build | AgentCore CLI or Terraform |
-| **Cost** | OpenAI tokens | Bedrock tokens; Lambda free tier | Bedrock tokens; Lambda free tier | Bedrock tokens; Runtime per use; KMS key about $1 a month if the CLI creates one |
+**2. Where does it run?** Independent of how it's built: **laptop** (01) → **Lambda** (02, 03: up to 15 minutes, stateless) → **AgentCore Runtime** (04: long sessions, isolation, Memory, Gateway, Identity, Policy). 05 to 07 run on a laptop as written and can be hosted on either, for example by wrapping them in 04's AgentCore app.
 
 ## When to use which
 
-**01 (local, OpenAI):** learning, quick experiments, comparing models, demos. Never production: a key on a laptop, no audit, and data leaves your cloud.
-
-**02 (Lambda + Converse):** small, short, stateless agents in production.
-- one or a few tools, runs well under 15 minutes, nothing to remember between calls
-- fewest dependencies, and model-neutral within Bedrock
-- examples: classify and route a document, extract fields from a claim, a nightly check
-
-**03 (Lambda + Claude SDK):** production agents with many tools, Claude only.
-- writing and maintaining JSON schemas for 10+ tools becomes the main cost
-- you accept a beta helper (pin the SDK version) and bundling a dependency
-- example: a claims triage agent calling policy, customer and payment tools
-
-**04 (AgentCore Runtime):** long-running or conversational agents.
-- runs longer than 15 minutes, or multi-turn sessions (a handler chatting with a Copilot)
-- needs memory, human approval with resume, many tools through a gateway, or per-user identity
-- examples: working a whole claims queue, the handler Copilot, any agent users talk to
+| Use | When | Avoid when |
+|---|---|---|
+| **01** local, OpenAI | Learning, quick experiments, comparing models | Anything with real data or users |
+| **02** Lambda + Converse | Small, short, stateless production agents; fewest dependencies | Long runs, conversations, many tools |
+| **03** Lambda + tool runner | Claude-only agents with many tools | You need model choice or a GA-only stack |
+| **04** AgentCore Runtime | Long-running or conversational agents; per-session isolation | A tiny one-shot task (Lambda is simpler) |
+| **05** Strands | Most AWS agents: little code, model-neutral, Guardrails, AgentCore-native | You need explicit multi-step control flow |
+| **06** LangGraph | Workflows that must **resume**, **pause for approval**, branch or use agent teams; claims processing | A simple one-tool agent (more concepts than it needs) |
+| **07** Claude Agent SDK | "Claude Code for X": agents that work with files, shell, documents and subagents | Strict model choice, or a small footprint (it's large and Claude-only) |
+| **08** managed service | Fastest start when the provider's sandbox and tools fit, and its data terms are acceptable | Data must stay in your own account and region |
 
 ## In an enterprise
 
-| Concern | 01 local | 02 and 03 Lambda | 04 AgentCore |
-|---|---|---|---|
-| **Security review** | Not acceptable for production | Familiar to every AWS security team | Newer service; more questions, but agent-specific controls |
-| **Credentials** | Long-lived key in a file | IAM role, no keys | IAM role; **AgentCore Identity** for third-party credentials |
-| **Isolation** | Your laptop | Per invocation, shared warm containers | **Per session** |
-| **Access to systems** | Whatever your laptop can reach | IAM per function, integrations in code | Gateway with central auth and **Cedar policies** on tool calls |
-| **Audit and observability** | Console output | CloudWatch logs and X-Ray | Agent traces built in, plus logs |
-| **Data residency** | The provider's region | Your region (Sydney) | Your region; check the service and model are offered there |
-| **Infrastructure as code** | None | Very mature in Terraform | Terraform resources exist (`aws_bedrockagentcore_*`) but are newer |
-| **Lock-in** | Low (OpenAI-compatible APIs) | Low (Converse works with any Bedrock model) | AgentCore wrapper and services; keep agent logic separate, as here |
+| Concern | 01 local | 02, 03 Lambda | 04 to 07 in your AWS account | 08 managed |
+|---|---|---|---|---|
+| **Credentials** | Key in a file | IAM role | IAM role (AgentCore Identity on 04) | Provider account and keys |
+| **Data residency** | Provider's region | Sydney | Sydney | Provider's platform and regions |
+| **Control and audit** | None | Full, in code | Full, in code; framework adds structure | Least; behaviour lives in the provider's configuration |
+| **Security review** | Not for production | Familiar | Familiar host; framework is a dependency to review | Vendor assessment |
+| **Lock-in** | Low | Low | Framework-level (moderate); keep logic separate | Highest |
+| **Effort to build** | Lowest | Low | Medium | Lowest for supported jobs |
 
-**Typical path:** prototype locally (01), pilot on Lambda (02 or 03, fast to approve and cheap), and move to AgentCore (04) when the agent needs sessions, memory, a gateway or long runs. Keeping the agent logic separate from the hosting wrapper keeps each move small.
+**Typical path:** prototype locally (01) → pick a framework (05 for most AWS work, 06 when the process needs state and approvals) → pilot on Lambda (02) → run long or conversational agents on AgentCore (04). Use a harness (07) when the job is file- and tool-heavy, and a managed service (08) when speed matters more than control and the data terms allow it.
 
 ## In this repo
 
 - **Deployed:** 02 on Lambda ([ADR 0001](../../docs/adr/0001-lambda-and-bedrock-converse.md)).
-- **Next:** the claims agent and the handler Copilot on AgentCore Runtime (decision to be recorded as an ADR).
-- Each folder's README explains its code.
+- **Next:** the claims agent, likely LangGraph (06) for durable state and the $1,000 approval, hosted on AgentCore (04). To be recorded as an ADR.
+- Each folder's README explains its code. Tests use stubs, so CI never calls a model or AWS.

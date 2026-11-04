@@ -6,7 +6,7 @@ An agent works the claims queue, looks up the policy wording and claims manual, 
 
 ## Agents
 
-Four numbered versions of the first agent show the main choices: local script or cloud, hand-written loop or SDK tool runner, and Lambda or AgentCore Runtime. See [app/maze/README.md](app/maze/README.md) for when to use which.
+Eight numbered versions of the first agent form an agent ladder, from a hand-written loop to frameworks (Strands, LangGraph), a harness (Claude Agent SDK) and managed services, hosted on a laptop, Lambda or AgentCore Runtime. See [app/maze/README.md](app/maze/README.md) for when to use which.
 
 ## Status
 
