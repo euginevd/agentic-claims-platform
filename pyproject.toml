@@ -27,6 +27,9 @@ pythonpath = [
     "app/maze/05_strands_bedrock",
     "app/maze/06_langgraph_bedrock",
     "app/maze/07_claude_agent_sdk",
+    "app/claims",
+    "app/claims/01_eval_single_call",
+    "app/claims/02_claim_agent",
 ]
 testpaths = ["tests"]
 
