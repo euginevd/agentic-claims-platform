@@ -1,8 +1,8 @@
 # Maze agent with the Anthropic SDK (alternative)
 
-The same maze agent as [`../maze_agent`](../maze_agent), written with the **Anthropic Python SDK's tool runner** rather than a hand-written loop on Bedrock's Converse API.
+The same maze agent as [`../02_lambda_converse`](../02_lambda_converse), written with the **Anthropic Python SDK's tool runner** rather than a hand-written loop on Bedrock's Converse API.
 
-**Status:** reference code, not deployed. The deployed agent is `../maze_agent` (see [ADR 0001](../../docs/adr/0001-lambda-and-bedrock-converse.md)). This version needs a packaging step before Terraform can deploy it (see below).
+**Status:** reference code, not deployed. The deployed agent is `../02_lambda_converse` (see [ADR 0001](../../../docs/adr/0001-lambda-and-bedrock-converse.md)). This version needs a packaging step before Terraform can deploy it (see below).
 
 ## What it does
 
@@ -66,7 +66,7 @@ The tool runner is the harness. Each iteration:
 2. if Claude asks for a tool (`stop_reason == "tool_use"`), runs `read_web_page` with Claude's arguments,
 3. appends the tool result to the conversation, and goes round again.
 
-It stops when Claude answers without a tool call (`end_turn`) or after `max_iterations` (25) calls, the step cap. This is the same loop as `run_agent()` in the course's `setup.ipynb` and `run_agent()` in `../maze_agent/handler.py`, but the SDK writes it for you.
+It stops when Claude answers without a tool call (`end_turn`) or after `max_iterations` (25) calls, the step cap. This is the same loop as `run_agent()` in the course's `setup.ipynb` and `run_agent()` in `../02_lambda_converse/handler.py`, but the SDK writes it for you.
 
 ### 4. Usage and logs
 
@@ -82,7 +82,7 @@ It stops when Claude answers without a tool call (`end_turn`) or after `max_iter
 
 ## Compared with the Converse version
 
-| | `../maze_agent` (Converse) | `maze_agent_sdk` (tool runner) |
+| | `../02_lambda_converse` (Converse) | `03_lambda_claude_sdk` (tool runner) |
 |---|---|---|
 | Library | `boto3`, already in the Lambda runtime | `anthropic`, **must be bundled** |
 | Loop | Written by hand | The SDK's tool runner |

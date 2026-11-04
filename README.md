@@ -4,6 +4,10 @@ A production-grade agentic AI platform for travel insurance claims, built on AWS
 
 An agent works the claims queue, looks up the policy wording and claims manual, and decides each claim (approve, decline or refer) with its reasons. A human signs off large payouts.
 
+## Agents
+
+Four numbered versions of the first agent show the main choices: local script or cloud, hand-written loop or SDK tool runner, and Lambda or AgentCore Runtime. See [app/maze/README.md](app/maze/README.md) for when to use which.
+
 ## Status
 
 Phase 1, foundation. See [docs/STATUS.md](docs/STATUS.md).

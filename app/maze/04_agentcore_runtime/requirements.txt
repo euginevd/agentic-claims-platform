@@ -1,0 +1,3 @@
+# Packaged with main.py and ../02_lambda_converse/handler.py for AgentCore Runtime (Linux, arm64, Python 3.12).
+bedrock-agentcore>=1.24,<2
+boto3>=1.35

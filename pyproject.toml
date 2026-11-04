@@ -6,10 +6,21 @@ requires-python = ">=3.12"
 dependencies = []
 
 [dependency-groups]
-dev = ["bedrock-agentcore>=1.24,<2", "boto3>=1.35", "pytest>=8", "ruff>=0.6"]
+dev = [
+    "bedrock-agentcore>=1.24,<2",
+    "boto3>=1.35",
+    "openai>=1.50",
+    "pytest>=8",
+    "python-dotenv>=1.0",
+    "ruff>=0.6",
+]
 
 [tool.pytest.ini_options]
-pythonpath = ["app/maze_agent", "app/maze_agent_core"]
+pythonpath = [
+    "app/maze/01_local_openai",
+    "app/maze/02_lambda_converse",
+    "app/maze/04_agentcore_runtime",
+]
 testpaths = ["tests"]
 
 [tool.ruff]
