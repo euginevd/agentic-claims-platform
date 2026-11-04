@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - name: Format
         run: terraform fmt -check -recursive infra
       - name: Validate
@@ -37,7 +37,7 @@ jobs:
             terraform -chdir="$dir" init -backend=false -input=false
             terraform -chdir="$dir" validate
           done
-      - uses: terraform-linters/setup-tflint@v4
+      - uses: terraform-linters/setup-tflint@v6
       - name: Lint (tflint)
         run: tflint --recursive --config "$GITHUB_WORKSPACE/.tflint.hcl"
       - name: Security scan (Checkov)
@@ -60,11 +60,11 @@ jobs:
       TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
           aws-region: ap-southeast-2
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - name: Init
         run: terraform -chdir="$WORKDIR" init -input=false -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}"
       - name: Plan
@@ -88,11 +88,11 @@ jobs:
       TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
           aws-region: ap-southeast-2
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - name: Init
         run: terraform -chdir="$WORKDIR" init -input=false -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}"
       - name: Apply
@@ -113,11 +113,11 @@ jobs:
       TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
           aws-region: ap-southeast-2
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - name: Init
         run: terraform -chdir="$WORKDIR" init -input=false -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}"
       - name: Destroy
