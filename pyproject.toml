@@ -9,10 +9,14 @@ dependencies = []
 dev = [
     "bedrock-agentcore>=1.24,<2",
     "boto3>=1.35",
+    "claude-agent-sdk>=0.2,<0.3",
+    "langchain-aws>=1.9,<2",
+    "langgraph>=1.2,<2",
     "openai>=1.50",
     "pytest>=8",
     "python-dotenv>=1.0",
     "ruff>=0.6",
+    "strands-agents>=1.60,<2",
 ]
 
 [tool.pytest.ini_options]
@@ -20,6 +24,9 @@ pythonpath = [
     "app/maze/01_local_openai",
     "app/maze/02_lambda_converse",
     "app/maze/04_agentcore_runtime",
+    "app/maze/05_strands_bedrock",
+    "app/maze/06_langgraph_bedrock",
+    "app/maze/07_claude_agent_sdk",
 ]
 testpaths = ["tests"]
 
