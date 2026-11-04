@@ -26,10 +26,6 @@ jobs:
       - uses: actions/checkout@v4
       # Infrastructure misconfigurations are scanned by Checkov in the terraform workflow.
       - name: Scan dependencies (Trivy)
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scanners: vuln,secret
-          severity: HIGH,CRITICAL
-          exit-code: "1"
-          ignore-unfixed: true
+        run: |
+          docker run --rm -v "$PWD:/repo" aquasec/trivy:0.76.1 fs /repo \
+            --scanners vuln,secret --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1
