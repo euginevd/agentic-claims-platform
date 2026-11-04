@@ -6,6 +6,14 @@ on:
     paths: ["infra/**", "app/**", ".github/workflows/terraform.yml"]
   pull_request:
     paths: ["infra/**", "app/**", ".github/workflows/terraform.yml"]
+  # Manual spin-up and tear-down: Actions → terraform → Run workflow (from main).
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "up = deploy dev, down = destroy dev"
+        type: choice
+        options: [up, down]
+        default: up
 
 permissions:
   contents: read
@@ -64,9 +72,10 @@ jobs:
           terraform -chdir="$WORKDIR" plan -input=false -no-color -out=tfplan | tee plan.txt
           { echo '### Terraform plan (dev)'; echo '```'; tail -n 60 plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
-  # Applies from main only, through the "dev" environment (with a required reviewer).
+  # Deploys only when you press "up", from main, through the "dev" environment.
+  # Merges don't deploy, so nothing is left running by accident.
   apply:
-    if: github.event_name == 'push' && vars.AWS_APPLY_ROLE_ARN != ''
+    if: inputs.action == 'up' && vars.AWS_APPLY_ROLE_ARN != ''
     needs: static
     runs-on: ubuntu-latest
     environment: dev
@@ -88,3 +97,28 @@ jobs:
         run: terraform -chdir="$WORKDIR" init -input=false -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}"
       - name: Apply
         run: terraform -chdir="$WORKDIR" apply -input=false -auto-approve
+
+  # Tears dev down when you press "down". The bootstrap (state bucket, roles, budget) stays.
+  destroy:
+    if: inputs.action == 'down' && vars.AWS_APPLY_ROLE_ARN != ''
+    needs: static
+    runs-on: ubuntu-latest
+    environment: dev
+    concurrency: terraform-dev
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      TF_VAR_model_id: ${{ vars.MODEL_ID }}
+      TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+      - uses: hashicorp/setup-terraform@v3
+      - name: Init
+        run: terraform -chdir="$WORKDIR" init -input=false -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}"
+      - name: Destroy
+        run: terraform -chdir="$WORKDIR" destroy -input=false -auto-approve

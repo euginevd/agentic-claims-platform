@@ -33,5 +33,5 @@ variable "max_concurrency" {
 variable "log_retention_days" {
   description = "How long to keep the function's logs"
   type        = number
-  default     = 30
+  default     = 7
 }

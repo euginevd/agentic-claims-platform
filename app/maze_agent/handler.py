@@ -10,7 +10,9 @@ import boto3
 
 ALLOWED_HOST = "maze.edwarddonner.com"
 MAX_STEPS = 25
-MAX_PAGE_CHARS = 5000
+# Cost controls: every step resends the whole history, so keep pages and replies short.
+MAX_PAGE_CHARS = 3000
+MAX_OUTPUT_TOKENS = 512
 FETCH_TIMEOUT_SECONDS = 10
 
 TASK = "Have a look at https://maze.edwarddonner.com and do what it says."
@@ -79,6 +81,7 @@ def run_agent(client, model_id, task=TASK, max_steps=MAX_STEPS):
             system=[{"text": SYSTEM_PROMPT}],
             messages=messages,
             toolConfig=TOOL_CONFIG,
+            inferenceConfig={"maxTokens": MAX_OUTPUT_TOKENS},
         )
         for key in usage:
             usage[key] += response["usage"][key]

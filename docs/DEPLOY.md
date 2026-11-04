@@ -47,7 +47,13 @@ These are not secrets. No AWS keys are stored in GitHub: jobs get short-lived cr
 ## Every change (CI/CD)
 
 1. Open a pull request. CI runs tests and scans, and `terraform plan` appears in the job summary.
-2. Merge. The `apply` job waits for your approval in the `dev` environment, then deploys.
+2. Merge. Merging checks the code but **doesn't deploy**.
+
+## Spin up and tear down
+
+- **Up:** Actions → **terraform** → Run workflow → branch `main`, action `up` → approve the `dev` deployment.
+- **Down:** the same, with action `down`.
+- Typical test session: up → test → down, within an hour. Idle cost is about $0 either way (see ADR 0003); tearing down keeps the account clean.
 
 ## Test the agent (CloudShell)
 

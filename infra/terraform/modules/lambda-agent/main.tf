@@ -35,7 +35,7 @@ resource "aws_iam_role" "agent" {
 
 resource "aws_cloudwatch_log_group" "agent" {
   #checkov:skip=CKV_AWS_158:Default CloudWatch encryption is enough for dev; customer KMS key for prod
-  #checkov:skip=CKV_AWS_338:30-day retention for dev; extend to meet the records policy for prod
+  #checkov:skip=CKV_AWS_338:7-day retention keeps dev cheap; extend to meet the records policy for prod
   name              = "/aws/lambda/${var.name}"
   retention_in_days = var.log_retention_days
 }
