@@ -60,7 +60,7 @@ jobs:
       TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
           aws-region: ap-southeast-2
@@ -88,7 +88,7 @@ jobs:
       TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
           aws-region: ap-southeast-2
@@ -113,7 +113,7 @@ jobs:
       TF_VAR_bedrock_model_arns: ${{ vars.BEDROCK_MODEL_ARNS }}
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
           aws-region: ap-southeast-2
